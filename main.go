@@ -30,6 +30,14 @@ func main(){
 
 	app.Post("/todos", func(c *fiber.Ctx) error {
 
+		// 忘却録
+		// variable
+		x  := 1;
+		// pointer xのアドレス
+		p  := &x
+		// pointerの中身
+		fmt.Println(*p)
+
 		todo := &Todo{}
 
 
