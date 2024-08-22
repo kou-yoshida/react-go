@@ -23,9 +23,7 @@ func main(){
 	todos := []Todo{}
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		fmt.Println(Todo{})
-		fmt.Println("requestが来た")
-		return c.Status(202).JSON(fiber.Map{"msg": "Hello, World"})
+		return c.Status(202).JSON(todos)
 	})
 
 	app.Post("/todos", func(c *fiber.Ctx) error {
@@ -54,6 +52,35 @@ func main(){
 		todos = append(todos, *todo)
 
 		return c.Status(201).JSON(todo)
+	})
+
+	app.Patch("/todos/:id",func(c *fiber.Ctx) error{
+		id := c.Params("id")
+		fmt.Println(id)
+
+		for i,todo := range todos{
+			if  fmt.Sprint(todo.ID) == id{
+				todos[i].Completed = !todos[i].Completed
+				return c.Status(200).JSON(todos[i])
+			}
+		}
+
+		fmt.Println(todos)
+
+
+		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
+	})
+
+	app.Delete("/todos/:id",func(c *fiber.Ctx)error{
+		id := c.Params("id")
+	
+		for i,todo := range todos{
+			if fmt.Sprint(todo.ID) == id {
+				todos := append(todos[:i],todos[i+1:]...)
+				return c.Status(200).JSON(fiber.Map{"msg": "success"})
+			}
+		}
+		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
 	})
 
 
